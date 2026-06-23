@@ -119,10 +119,18 @@ function shuffleArray(array) {
     return array;
 }
 
+function triggerInputEvent(id) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+}
+
 // ==========================================
 // 4. IP SCANNER LOGIC (CLIENT SIDE)
 // ==========================================
-function onScanProviderChange() {
+function onScanProviderChange(isInitial = false) {
     const provider = document.getElementById('scanProvider').value;
     const customCidrGroup = document.getElementById('customCidrGroup');
     const rangeSelectorGroup = document.getElementById('rangeSelectorGroup');
@@ -153,12 +161,13 @@ function onScanProviderChange() {
 
     // Auto-adjust min latency filter based on provider
     const minLatencySelect = document.getElementById('scanMinLatency');
-    if (minLatencySelect) {
+    if (minLatencySelect && !isInitial) {
         if (provider === 'arvancloud') {
             minLatencySelect.value = "0"; // Disabled for domestic CDN (low native latency)
         } else {
             minLatencySelect.value = "20"; // Reset to default 20ms for foreign CDNs
         }
+        triggerInputEvent('scanMinLatency');
     }
 }
 
@@ -1506,8 +1515,11 @@ function sendScannedIPsToGenerator() {
     document.getElementById('loadedIPsCount').textContent = importedIPs.length;
     document.getElementById('loadedIPsBadge').style.display = 'inline-block';
     document.getElementById('ipList').value = importedIPs.join('\n');
-    
     document.getElementById('inputType').value = 'list';
+    
+    triggerInputEvent('ipList');
+    triggerInputEvent('inputType');
+    
     toggleInputFields();
     
     switchTab('generator');
@@ -1520,6 +1532,10 @@ function sendSingleIPToGenerator(ipEndpoint) {
     document.getElementById('loadedIPsBadge').style.display = 'inline-block';
     document.getElementById('ipList').value = ipEndpoint;
     document.getElementById('inputType').value = 'list';
+    
+    triggerInputEvent('ipList');
+    triggerInputEvent('inputType');
+    
     toggleInputFields();
     switchTab('generator');
     showSuccess(`Loaded IP ${ipEndpoint} into the Generator tab!`);
@@ -1575,6 +1591,7 @@ function updateOutputCountValue() {
 
 function clearGeneratorIPList() {
     document.getElementById('ipList').value = '';
+    triggerInputEvent('ipList');
     importedIPs = [];
     document.getElementById('loadedIPsBadge').style.display = 'none';
 }
@@ -1951,12 +1968,14 @@ async function loadIPRanges(service) {
             selectedRanges = ipRanges;
         }
         document.getElementById('ipRange').value = selectedRanges.join('\n');
+        triggerInputEvent('ipRange');
         showSuccess(`Loaded ranges for ${service.toUpperCase()} successfully.`);
     } catch (error) {
         console.error(error);
         const fallback = IP_RANGES_DATABASE[service];
         if (fallback) {
             document.getElementById('ipRange').value = shuffleArray([...fallback]).slice(0, 4).join('\n');
+            triggerInputEvent('ipRange');
             showSuccess(`Offline: Loaded cached local ranges for ${service.toUpperCase()}.`);
         } else {
             showError('An error occurred while loading IPs.');
@@ -1993,8 +2012,60 @@ function downloadOutput() {
     }
 }
 
+const STORAGE_PREFIX = 'xray_scanner_';
+
+const PERSISTED_FIELDS = [
+    { id: 'scanProvider', type: 'value' },
+    { id: 'scanThreads', type: 'value' },
+    { id: 'scanTimeout', type: 'value' },
+    { id: 'scanMinLatency', type: 'value' },
+    { id: 'scanTestCount', type: 'value' },
+    { id: 'scanSampleSize', type: 'value' },
+    { id: 'scanCustomCidr', type: 'value' },
+    { id: 'port_443', type: 'checked' },
+    { id: 'port_8443', type: 'checked' },
+    { id: 'port_2053', type: 'checked' },
+    { id: 'port_2083', type: 'checked' },
+    { id: 'port_2096', type: 'checked' },
+    { id: 'port_80', type: 'checked' },
+    { id: 'port_8080', type: 'checked' },
+    { id: 'inputConfig', type: 'value' },
+    { id: 'inputType', type: 'value' },
+    { id: 'configNameStyle', type: 'value' },
+    { id: 'configNamePrefix', type: 'value' },
+    { id: 'ipRange', type: 'value' },
+    { id: 'outputCount', type: 'value' },
+    { id: 'ipList', type: 'value' },
+    { id: 'configList', type: 'value' },
+    { id: 'spoofIp', type: 'value' },
+    { id: 'spoofPort', type: 'value' }
+];
+
+function initLocalStorageState() {
+    PERSISTED_FIELDS.forEach(field => {
+        const el = document.getElementById(field.id);
+        if (!el) return;
+        
+        const savedVal = localStorage.getItem(STORAGE_PREFIX + field.id);
+        if (savedVal !== null) {
+            if (field.type === 'checked') {
+                el.checked = savedVal === 'true';
+            } else {
+                el.value = savedVal;
+            }
+        }
+        
+        const eventName = el.tagName === 'SELECT' || field.type === 'checked' ? 'change' : 'input';
+        el.addEventListener(eventName, () => {
+            const val = field.type === 'checked' ? el.checked.toString() : el.value;
+            localStorage.setItem(STORAGE_PREFIX + field.id, val);
+        });
+    });
+}
+
 // Initialize App Core (directly, since DOM is already loaded)
-onScanProviderChange();
+initLocalStorageState();
+onScanProviderChange(true);
 toggleInputFields();
 toggleNamingFields();
 updateOutputCountValue();
