@@ -1,4 +1,4 @@
-# CodeFlow Xray Panel 🌌
+# CodeFlow IP Panel 🌌
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Telegram Channel](https://img.shields.io/badge/Telegram-Channel-blue?style=flat&logo=telegram)](https://t.me/CodeFlowDevs)

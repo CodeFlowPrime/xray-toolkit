@@ -1,4 +1,4 @@
-// CodeFlow Xray Panel - Public Script
+// CodeFlow IP Panel - Public Script
 // Handles Space Background, Theme, and Accent Colors
 
 document.addEventListener('DOMContentLoaded', () => {

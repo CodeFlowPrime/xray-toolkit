@@ -1337,30 +1337,109 @@ tr:hover td {
 
 .meta-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1.1fr 1.6fr 1.1fr 1.1fr;
     gap: 1rem;
+    grid-template-areas: "remaining action scanned healthy";
 }
+
+.card-remaining { grid-area: remaining; }
+.card-action { grid-area: action; }
+.card-scanned { grid-area: scanned; }
+.card-healthy { grid-area: healthy; }
 
 @media (max-width: 992px) {
     .meta-grid {
         grid-template-columns: repeat(2, 1fr);
+        grid-template-areas: 
+            "remaining scanned"
+            "healthy action";
+    }
+}
+
+@media (max-width: 576px) {
+    .meta-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: 
+            "remaining healthy"
+            "scanned scanned"
+            "action action";
+        gap: 0.75rem;
     }
 }
 
 .meta-card {
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    padding: 0.85rem 1.1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.35rem;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.meta-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.meta-card.card-remaining:hover {
+    border-color: var(--accent-glow);
+    box-shadow: 0 4px 20px var(--accent-bg-glow);
+}
+
+.meta-card.card-healthy:hover {
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 20px var(--success-glow);
+}
+
+.meta-card.card-action:hover {
+    border-color: rgba(245, 158, 11, 0.4);
+    box-shadow: 0 4px 20px var(--warning-glow);
+}
+
+.meta-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .meta-label {
     font-size: 0.75rem;
     color: var(--text-secondary);
     font-weight: 500;
+}
+
+.meta-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-remaining {
+    color: var(--accent-color);
+}
+
+.icon-action {
+    color: var(--warning);
+}
+
+.icon-scanned {
+    color: var(--text-secondary);
+}
+
+.icon-healthy {
+    color: var(--success);
+}
+
+.meta-card:hover .meta-icon {
+    transform: scale(1.15);
+    opacity: 1;
 }
 
 .meta-value {

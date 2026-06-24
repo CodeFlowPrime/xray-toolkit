@@ -28,7 +28,7 @@
                         <path d="M18.3 5.7a9 9 0 0 0-12.6 0"></path>
                     </svg>
                     <div class="logo-text">
-                        <h1><a href="https://t.me/CodeFlowDevs" target="_blank" style="color: inherit; text-decoration: none;">CodeFlow</a> Xray Panel</h1>
+                        <h1><a href="https://t.me/CodeFlowDevs" target="_blank" style="color: inherit; text-decoration: none;">CodeFlow</a> IP Panel</h1>
                         <p>Clean IP Scanner & Config Modifier by <a href="https://github.com/CodeFlowPrime/xray-toolkit" target="_blank" style="color: var(--accent-color); text-decoration: none; font-weight: 500;">CodeFlow Team</a></p>
                     </div>
                 </div>
@@ -231,20 +231,32 @@
 
                         <!-- Meta Info Row -->
                         <div class="meta-grid">
-                            <div class="meta-card">
-                                <span class="meta-label">Time Remaining</span>
+                            <div class="meta-card card-remaining">
+                                <div class="meta-card-header">
+                                    <span class="meta-label">Time Remaining</span>
+                                    <svg class="meta-icon icon-remaining" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                </div>
                                 <span class="meta-value" id="statRemainingTime">00:00</span>
                             </div>
-                            <div class="meta-card">
-                                <span class="meta-label">Current Action</span>
+                            <div class="meta-card card-action">
+                                <div class="meta-card-header">
+                                    <span class="meta-label">Current Action</span>
+                                    <svg class="meta-icon icon-action" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                </div>
                                 <span class="meta-value" id="statCurrentAction" style="font-size: 0.85rem; line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">Idle</span>
                             </div>
-                            <div class="meta-card">
-                                <span class="meta-label">Scanned IPs</span>
+                            <div class="meta-card card-scanned">
+                                <div class="meta-card-header">
+                                    <span class="meta-label">Scanned IPs</span>
+                                    <svg class="meta-icon icon-scanned" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+                                </div>
                                 <span class="meta-value"><span id="statScanned">0</span> / <span id="statTotal">0</span></span>
                             </div>
-                            <div class="meta-card">
-                                <span class="meta-label">Healthy IPs</span>
+                            <div class="meta-card card-healthy">
+                                <div class="meta-card-header">
+                                    <span class="meta-label">Healthy IPs</span>
+                                    <svg class="meta-icon icon-healthy" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                </div>
                                 <span class="meta-value" id="statHealthy" style="color: var(--success);">0</span>
                             </div>
                         </div>
