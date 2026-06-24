@@ -146,12 +146,21 @@ function onScanProviderChange(isInitial = false) {
         
         // Populate ranges checkboxes
         const ranges = IP_RANGES_DATABASE[provider] || [];
+        const savedSelectedRanges = localStorage.getItem('xray_scanner_selected_ranges_' + provider);
+        let selectedSet = null;
+        if (savedSelectedRanges) {
+            try {
+                selectedSet = new Set(JSON.parse(savedSelectedRanges));
+            } catch(e) {}
+        }
+
         let html = '';
         ranges.forEach((range, idx) => {
             const id = `range_${provider}_${idx}`;
+            const isChecked = selectedSet ? selectedSet.has(range) : true;
             html += `
                 <div style="display: inline-block;">
-                    <input type="checkbox" id="${id}" class="pill-checkbox" value="${range}" checked>
+                    <input type="checkbox" id="${id}" class="pill-checkbox" value="${range}" ${isChecked ? 'checked' : ''} onchange="saveSelectedRanges('${provider}')">
                     <label for="${id}" class="pill-label" style="font-family: monospace; font-size: 0.8rem; padding: 0.4rem 0.8rem; border-radius: 15px;">${range}</label>
                 </div>
             `;
@@ -176,6 +185,19 @@ function selectAllRanges(status) {
     checkboxes.forEach(cb => {
         cb.checked = status;
     });
+    const provider = document.getElementById('scanProvider').value;
+    saveSelectedRanges(provider);
+}
+
+function saveSelectedRanges(provider) {
+    const checkboxes = document.querySelectorAll('#providerRangesContainer input[type="checkbox"]');
+    const selected = [];
+    checkboxes.forEach(cb => {
+        if (cb.checked) {
+            selected.push(cb.value);
+        }
+    });
+    localStorage.setItem('xray_scanner_selected_ranges_' + provider, JSON.stringify(selected));
 }
 
 function updateScanSampleCount() {
